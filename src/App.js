@@ -2,6 +2,9 @@
 import { useEffect, useReducer } from "react";
 import Header from "./Header";
 import Main from "./Main";
+import Loader from "./Loader";
+import Error from "./Error";
+import StartScreen from "./StartScreen";
 
 const initialState = {
   questions: [],
@@ -20,7 +23,7 @@ function reducer(state, action) {
 }
 
 function App() {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [{ questions, status }, dispatch] = useReducer(reducer, initialState);
   useEffect(function () {
     async function getQsData() {
       try {
@@ -39,13 +42,15 @@ function App() {
     }
     getQsData();
   }, []);
+  const numQs = questions.length;
   return (
     <div className="app">
       {/* <DateCounter /> */}
       <Header />
       <Main>
-        <p>1/15</p>
-        <p>qs</p>
+        {status === "Loading" && <Loader />}
+        {status === "Error" && <Error />}
+        {status === "Ready" && <StartScreen numQs={numQs} />}
       </Main>
     </div>
   );
