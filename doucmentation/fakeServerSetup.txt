@@ -9,3 +9,5 @@ step3: npm run server
 
 by following these steps correctly now we will hv a fake api with questions.json content 
 at port 8000 i.e http://localhost:8000/questions
+
+note: its ../questions not bc of file name but actually the json data inside it
