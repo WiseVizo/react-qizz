@@ -1,0 +1,11 @@
+Fake json server setup for data/questions.json file
+
+step1: npm i json-server
+
+step2: add given line in package.json scripts object
+"server": "json-server --watch data/questions.json --port 8000",
+
+step3: npm run server 
+
+by following these steps correctly now we will hv a fake api with questions.json content 
+at port 8000 i.e http://localhost:8000/questions
