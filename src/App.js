@@ -11,6 +11,7 @@ const initialState = {
   questions: [],
   status: "Loading", //* possible status: Loading, Ready, Error, Active, Finished
   index: 0, //* for identifying the current qs
+  answer: null, //* for identifying the correct answer, possible value type: int
 };
 
 function reducer(state, action) {
@@ -21,13 +22,15 @@ function reducer(state, action) {
       return { ...state, status: "Error" };
     case "Active":
       return { ...state, status: "Active" };
+    case "selectAnswer":
+      return { ...state, answer: action.payload };
     default:
       throw new Error("Unknown Action");
   }
 }
 
 function App() {
-  const [{ questions, status, index }, dispatch] = useReducer(
+  const [{ questions, status, index, answer }, dispatch] = useReducer(
     reducer,
     initialState
   );
@@ -63,7 +66,13 @@ function App() {
         {status === "Ready" && (
           <StartScreen numQs={numQs} handleQizzStart={handleQizzStart} />
         )}
-        {status === "Active" && <Questions question={questions[index]} />}
+        {status === "Active" && (
+          <Questions
+            question={questions[index]}
+            answer={answer}
+            dispatch={dispatch}
+          />
+        )}
       </Main>
     </div>
   );
