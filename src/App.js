@@ -5,10 +5,12 @@ import Main from "./Main";
 import Loader from "./Loader";
 import Error from "./Error";
 import StartScreen from "./StartScreen";
+import Questions from "./Questions";
 
 const initialState = {
   questions: [],
-  status: "Loading", // possible status: Loading, Ready, Error, Active, Finished
+  status: "Loading", //* possible status: Loading, Ready, Error, Active, Finished
+  index: 0, //* for identifying the current qs
 };
 
 function reducer(state, action) {
@@ -17,13 +19,18 @@ function reducer(state, action) {
       return { ...state, questions: action.payload, status: "Ready" };
     case "dataFailed":
       return { ...state, status: "Error" };
+    case "Active":
+      return { ...state, status: "Active" };
     default:
       throw new Error("Unknown Action");
   }
 }
 
 function App() {
-  const [{ questions, status }, dispatch] = useReducer(reducer, initialState);
+  const [{ questions, status, index }, dispatch] = useReducer(
+    reducer,
+    initialState
+  );
   useEffect(function () {
     async function getQsData() {
       try {
@@ -43,6 +50,9 @@ function App() {
     getQsData();
   }, []);
   const numQs = questions.length;
+  function handleQizzStart() {
+    dispatch({ type: "Active" });
+  }
   return (
     <div className="app">
       {/* <DateCounter /> */}
@@ -50,7 +60,10 @@ function App() {
       <Main>
         {status === "Loading" && <Loader />}
         {status === "Error" && <Error />}
-        {status === "Ready" && <StartScreen numQs={numQs} />}
+        {status === "Ready" && (
+          <StartScreen numQs={numQs} handleQizzStart={handleQizzStart} />
+        )}
+        {status === "Active" && <Questions question={questions[index]} />}
       </Main>
     </div>
   );
