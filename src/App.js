@@ -9,6 +9,8 @@ import Questions from "./Questions";
 import NextQsButton from "./NextQsButton";
 import ProgressBar from "./ProgressBar";
 import EndScreen from "./EndScreen";
+import Footer from "./Footer";
+import Timer from "./Timer";
 
 const initialState = {
   questions: [],
@@ -16,6 +18,7 @@ const initialState = {
   index: 0, //* for identifying the current qs
   answer: null, //* for identifying the correct answer, possible value type: int
   points: 0,
+  time: 150, //* in secs
 };
 
 function reducer(state, action) {
@@ -41,17 +44,21 @@ function reducer(state, action) {
     case "finished":
       return { ...state, status: "finished" };
     case "reset":
-      return { ...state, status: "Ready", index: 0, answer: null, points: 0 };
+      return { ...initialState, status: "Ready", questions: state.questions };
+    case "tick":
+      return {
+        ...state,
+        time: state.time - 1,
+        status: state.time === 0 ? "finished" : state.status,
+      };
     default:
       throw new Error("Unknown Action");
   }
 }
 
 function App() {
-  const [{ questions, status, index, answer, points }, dispatch] = useReducer(
-    reducer,
-    initialState
-  );
+  const [{ questions, status, index, answer, points, time }, dispatch] =
+    useReducer(reducer, initialState);
   useEffect(function () {
     async function getQsData() {
       try {
@@ -102,12 +109,15 @@ function App() {
               answer={answer}
               dispatch={dispatch}
             />
-            <NextQsButton
-              dispatch={dispatch}
-              answer={answer}
-              index={index}
-              numQs={numQs}
-            />
+            <Footer>
+              <Timer time={time} dispatch={dispatch} />
+              <NextQsButton
+                dispatch={dispatch}
+                answer={answer}
+                index={index}
+                numQs={numQs}
+              />
+            </Footer>
           </>
         )}
         {status === "finished" && (
