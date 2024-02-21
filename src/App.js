@@ -40,6 +40,8 @@ function reducer(state, action) {
       return { ...state, index: state.index + 1, answer: null };
     case "finished":
       return { ...state, status: "finished" };
+    case "reset":
+      return { ...state, status: "Ready", index: 0, answer: null, points: 0 };
     default:
       throw new Error("Unknown Action");
   }
@@ -112,6 +114,7 @@ function App() {
           <EndScreen
             points={points}
             heighestPossiblePoints={heighestPossiblePoints}
+            dispatch={dispatch}
           />
         )}
       </Main>
