@@ -7,6 +7,7 @@ import Error from "./Error";
 import StartScreen from "./StartScreen";
 import Questions from "./Questions";
 import NextQsButton from "./NextQsButton";
+import ProgressBar from "./ProgressBar";
 
 const initialState = {
   questions: [],
@@ -42,7 +43,7 @@ function reducer(state, action) {
 }
 
 function App() {
-  const [{ questions, status, index, answer }, dispatch] = useReducer(
+  const [{ questions, status, index, answer, points }, dispatch] = useReducer(
     reducer,
     initialState
   );
@@ -65,6 +66,10 @@ function App() {
     getQsData();
   }, []);
   const numQs = questions.length;
+  const heighestPossiblePoints = questions.reduce(
+    (points, currQs) => points + currQs.points,
+    0
+  );
   function handleQizzStart() {
     dispatch({ type: "Active" });
   }
@@ -80,6 +85,13 @@ function App() {
         )}
         {status === "Active" && (
           <>
+            <ProgressBar
+              index={index}
+              numQs={numQs}
+              points={points}
+              heighestPossiblePoints={heighestPossiblePoints}
+              answer={answer}
+            />
             <Questions
               question={questions[index]}
               answer={answer}
