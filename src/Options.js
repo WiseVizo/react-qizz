@@ -4,7 +4,9 @@ function Options({ question, dispatch, answer }) {
       {question.options.map((option, index) => (
         <button
           className={`btn btn-option ${index === answer ? "answer" : ""} ${
-            index === question.correctOption && answer !== null
+            answer === null
+              ? ""
+              : question.correctOption === index
               ? "correct"
               : "wrong"
           }`}
